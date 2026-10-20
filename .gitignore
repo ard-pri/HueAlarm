@@ -1,0 +1,7 @@
+.pio/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+include/secrets.h
