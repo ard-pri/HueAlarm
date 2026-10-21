@@ -12,10 +12,13 @@ namespace {
 constexpr int kHeaderHeight = 40;
 constexpr int kRowHeight = 33;
 constexpr uint8_t kSunriseChoices[] = {0, 5, 10, 15, 20, 30};
-const uint16_t kAccent = lgfx::color565(64, 190, 84);  // Braun bell green
+const uint16_t kAccent = lgfx::color565(64, 190, 84);   // Braun bell green
+const uint16_t kText = lgfx::color565(184, 180, 144);   // warm backlit LCD tone
 const uint16_t kLine = lgfx::color565(40, 40, 40);
 
 enum Row { kSunrise, kLight, kSync, kWps, kWifi, kInfo, kRowCount };
+
+uint32_t lastDraw = 0;
 
 uint8_t nextSunrise(uint8_t value) {
   for (size_t i = 0; i < sizeof(kSunriseChoices); ++i) {
@@ -30,8 +33,12 @@ Action handleTouch() {
   if (!t.wasClicked()) return Action::None;
   if (t.y < kHeaderHeight) return t.x < 110 ? Action::Back : Action::None;
 
+  lastDraw = 0;  // redraw immediately after any tap
   switch ((t.y - kHeaderHeight) / kRowHeight) {
     case kSunrise: {
+      // Ignore taps under the "< Back" button on the left so a slightly low tap on
+      // "< Back" cannot accidentally cycle the sunrise duration.
+      if (t.x < 110) break;
       alarmclock::Config cfg = alarmclock::config();
       cfg.sunriseMinutes = nextSunrise(cfg.sunriseMinutes);
       alarmclock::setConfig(cfg);
@@ -51,7 +58,7 @@ void drawRow(M5Canvas& c, int row, const char* label, const String& value, uint1
   int y = kHeaderHeight + row * kRowHeight;
   c.setFont(&fonts::FreeSans9pt7b);
   c.setTextDatum(middle_left);
-  c.setTextColor(TFT_LIGHTGREY);
+  c.setTextColor(kText);
   c.drawString(label, 12, y + kRowHeight / 2);
   c.setTextDatum(middle_right);
   c.setTextColor(valueColor);
@@ -64,7 +71,7 @@ void draw(M5Canvas& c) {
   c.fillScreen(TFT_BLACK);
   c.setFont(&fonts::FreeSans9pt7b);
   c.setTextDatum(middle_left);
-  c.setTextColor(TFT_LIGHTGREY);
+  c.setTextColor(kText);
   c.drawString("< Back", 12, kHeaderHeight / 2);
   c.setTextDatum(middle_center);
   c.setTextColor(TFT_DARKGREY);
@@ -86,13 +93,15 @@ void draw(M5Canvas& c) {
 
 }  // namespace
 
-void enter() { hue::loadCredentials(); }  // for the wake-up light name
+void enter() {
+  hue::loadCredentials();  // for the wake-up light name
+  lastDraw = 0;
+}
 
 Action update(M5Canvas& canvas) {
   Action action = handleTouch();
   if (action != Action::None) return action;
-  static uint32_t lastDraw = 0;
-  if (millis() - lastDraw >= 200) {
+  if (lastDraw == 0 || millis() - lastDraw >= 200) {
     lastDraw = millis();
     draw(canvas);
     canvas.pushSprite(0, 0);

@@ -9,6 +9,7 @@ namespace {
 constexpr int kHeaderHeight = 40;
 constexpr int kTop = kHeaderHeight + 1;  // wheel area
 const uint16_t kAccent = lgfx::color565(64, 190, 84);  // Braun bell green
+const uint16_t kText = lgfx::color565(184, 180, 144);  // warm backlit LCD tone
 const uint16_t kBand = lgfx::color565(36, 36, 36);
 
 WheelPicker hourWheel(24, 40, 110);
@@ -76,7 +77,7 @@ void drawFrame(M5Canvas& canvas) {
 
   canvas.setFont(&fonts::FreeSans9pt7b);
   canvas.setTextDatum(middle_left);
-  canvas.setTextColor(TFT_LIGHTGREY);
+  canvas.setTextColor(kText);
   canvas.drawString("Cancel", 12, kHeaderHeight / 2);
   canvas.setTextDatum(middle_center);
   canvas.setTextColor(TFT_DARKGREY);
@@ -90,7 +91,7 @@ void drawFrame(M5Canvas& canvas) {
   canvas.fillRoundRect(16, bandY(height), w - 32, 44, 10, kBand);
   canvas.setFont(&fonts::FreeSansBold18pt7b);
   canvas.setTextDatum(middle_center);
-  canvas.setTextColor(TFT_WHITE);
+  canvas.setTextColor(kText);
   canvas.drawString(":", w / 2, bandY(height) + 22 - 3);
 }
 

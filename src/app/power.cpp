@@ -23,9 +23,9 @@ constexpr uint8_t kAldo3 = 0x04;  // speaker enable
 constexpr uint8_t kBldo2 = 0x20;  // 5 V boost enable
 constexpr uint8_t kDldo1 = 0x80;  // vibration motor
 
-// The deep sleep timer runs on an RC oscillator that drifts by about 1 %, so long
-// sleeps end 2 % early and the rest is slept again (the clock is re-read from the
-// RTC on every start).
+// The deep sleep timer runs on an RC oscillator that can drift slow by ~3-4 %, so
+// sleeps over a minute end 5 % early and the rest is slept again (the clock is
+// re-read from the RTC on every start).
 constexpr time_t kMaxSleepSeconds = 3 * 3600;
 // The RTC countdown that switches the device on is limited to 255 minutes.
 constexpr time_t kMaxPowerOffSeconds = 4 * 3600;
@@ -147,7 +147,7 @@ bool isScreenOn() { return screenIsOn; }
 #endif
 
   time_t seconds = remaining;
-  if (seconds > 120) seconds = min(seconds - seconds / 50, kMaxSleepSeconds);
+  if (seconds > 60) seconds = min(seconds - seconds / 20, kMaxSleepSeconds);
   Log.printf("[power] deep sleep %s, battery %d mV\n",
              seconds ? (String(seconds) + " s").c_str() : "until touch",
              M5.Power.getBatteryVoltage());

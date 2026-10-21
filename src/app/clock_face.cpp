@@ -5,9 +5,9 @@
 namespace clockface {
 namespace {
 
-// Colours of the backlit Braun LCD.
+// Colours of the backlit Braun LCD (warm mid-brightness LCD tone, not white).
 constexpr uint16_t kBackground = 0x0000;
-const uint16_t kSegment = lgfx::color565(204, 202, 172);    // beige digits
+const uint16_t kSegment = lgfx::color565(184, 180, 144);    // warm backlit LCD digits
 const uint16_t kBellGreen = lgfx::color565(64, 190, 84);
 const uint16_t kBellOff = lgfx::color565(46, 46, 42);       // faint outline when off
 

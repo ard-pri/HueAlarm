@@ -254,12 +254,13 @@ void update() {
           wifilink::release();  // try connecting again
           wifilink::request();
         }
-      } else if (wifilink::connected() && now - lastSunriseTry >= kSunriseRetrySeconds) {
-        if (!lampResolved) {
+      } else if (wifilink::connected()) {
+        if (!lampResolved && now - lastSunriseTry >= kSunriseRetrySeconds) {
           // Resolve the lamp during the lead time, then wait for the sunrise start.
-          lastSunriseTry = now;
           lampResolved = resolveLamp();
-        } else if (now >= sunriseStart()) {
+          lastSunriseTry = lampResolved ? 0 : now;
+        }
+        if (lampResolved && now >= sunriseStart() && now - lastSunriseTry >= kSunriseRetrySeconds) {
           lastSunriseTry = now;
           if (startSunrise()) {
             releaseWifi();

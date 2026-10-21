@@ -190,7 +190,7 @@ void loop() {
   if (alarmclock::isRinging() && screen != Screen::Ringing) {
     leaveScreen();
     screen = Screen::Ringing;
-    if (!power::isScreenOn()) power::screenOn();
+    power::screenOn();
   } else if (!alarmclock::isRinging() && screen == Screen::Ringing) {
     screen = Screen::Clock;
     lastActivity = millis();

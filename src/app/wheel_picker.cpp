@@ -115,8 +115,9 @@ void WheelPicker::draw(M5Canvas& canvas, int top, int height, int originX, int o
     float distance = min(1.0f, fabsf(dy) / reach);
     // Rows shrink and fade towards the edges, like a drum seen from the front.
     canvas.setTextSize(1.0f - 0.35f * distance);
-    uint8_t level = 255 - (uint8_t)(190 * distance);
-    canvas.setTextColor(canvas.color565(level, level, level));
+    float fade = 1.0f - 0.72f * distance;
+    canvas.setTextColor(canvas.color565((uint8_t)(184 * fade), (uint8_t)(180 * fade),
+                                        (uint8_t)(144 * fade)));
     char text[4];
     snprintf(text, sizeof(text), "%02d", wrap(index, count_) * step_);
     canvas.drawString(text, x + width_ / 2, centerY + (int)dy);

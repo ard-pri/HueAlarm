@@ -75,7 +75,7 @@ Key compile-time settings in [`include/config.h`](include/config.h):
 | `HUEALARM_WAKE_MODE` | `HUEALARM_WAKE_TOUCH` | `HUEALARM_WAKE_TOUCH` (deep sleep, wake on screen touch, ~1 month battery) or `HUEALARM_WAKE_BUTTON` (power off, wake on side button, many months battery). See [`docs/POWER.md`](docs/POWER.md). |
 | `HUEALARM_LAMP_MATCH` | `"Twilight"` | Default case-insensitive product/light name match before a room/zone is selected on-device |
 | `HUEALARM_SCREEN_TIMEOUT_MS` | `5000` | Idle time before the screen turns off and the device goes back to sleep |
-| `HUEALARM_BRIGHTNESS` | `80` | Display backlight brightness (`0`..`255`) |
+| `HUEALARM_BRIGHTNESS` | `60` | Display backlight brightness (`0`..`255`) |
 
 ### USB Serial Commands (Debugging)
 

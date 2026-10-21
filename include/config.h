@@ -30,5 +30,5 @@
 // Screen switches off this long after the last touch.
 #define HUEALARM_SCREEN_TIMEOUT_MS 5000
 
-// Backlight brightness while the screen is on (0..255); low for a bedroom.
-#define HUEALARM_BRIGHTNESS 80
+// Backlight brightness while the screen is on (0..255); mid bedroom level.
+#define HUEALARM_BRIGHTNESS 60
