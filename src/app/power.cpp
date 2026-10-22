@@ -71,10 +71,14 @@ void configure(m5::M5Unified::config_t& cfg) {
   // The LCD keeps its content in deep sleep; skipping its reset saves ~70 ms. After
   // a power-on it holds random content and must be cleared (or it flashes grey).
   cfg.clear_display = esp_reset_reason() != ESP_RST_DEEPSLEEP;
+  // M5.begin() restores M5.Display.getBrightness() (default 128) at the end of its
+  // initialisation; zero it beforehand so the backlight never flashes during boot.
+  M5.Display.setBrightness(0);
 }
 
 void begin() {
   M5.Display.setBrightness(0);
+  if (bootReason() == Boot::Timer) M5.Display.sleep();
   // The touch controller was put into monitor mode for the sleep and keeps it
   // through the restart; monitor mode scans slowly, which makes dragging sluggish.
   if (M5.getBoard() == m5::board_t::board_M5StackCore2) {
@@ -114,6 +118,7 @@ const char* bootName(Boot boot) {
 void screenOn() {
   if (screenIsOn) return;
   M5.Display.wakeup();
+  M5.Display.waitDisplay();
   M5.Display.setBrightness(HUEALARM_BRIGHTNESS);
   screenIsOn = true;
 }
